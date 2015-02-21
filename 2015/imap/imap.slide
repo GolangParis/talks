@@ -1,0 +1,85 @@
+package imap
+A talk about golang APIs
+20 Feb 2015
+Tags: golang, imap, api
+
+Alex Plugaru
+Founder, Gorgias
+alex@plugaru.org
+@humanfromearth
+
+* Before we start
+
+- This is a talk about APIs of clients and servers in Go.
+- Not a talk about the IMAP protocol.
+
+* Why?
+
+I read people's e-mails.
+
+.image ./reading-emails.jpg _ 500
+
+* What for?
+
+Statistics, NLP and other magic.
+
+.image ./oracle.jpg _ 500
+
+* Existing packages
+
+- Client (almost complete) 
+.link https://github.com/mxk/go-imap https://github.com/mxk/go-imap
+- Server (WIP)
+.link github.com/alienscience/imapsrv github.com/alienscience/imapsrv 
+
+Not all rainbows
+
+- Different APIs
+- Code duplication
+- Mocked testing - or lack of tests.
+
+* What to do?
+
+I know! I'll fork, merge and refactor! 
+
+.image ./cat-bathtub.gif _ 500
+
+* client.go: main
+
+.code client.go /^func main/,/^}/
+
+* client.go: Dial
+
+.code client.go /^func Dial/,/^}/
+
+* A nicer client:
+
+.code newclient.go  /^func main/,/^}/ 
+
+* func NewClient
+
+.code internal.go  /^func NewClient/,/^}/ 
+
+* func Logger
+
+.code internal.go  /^func Logger/,/^}/ 
+ 
+
+* References & Credits
+
+- Dave Cheney's Functional options for Friendly APIs
+.link http://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis  http://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis   
+- net/http   
+.link https://golang.org/pkg/net/http https://golang.org/pkg/net/http
+
+* Conclusions
+
+- Doing servers and clients in Go is natural.
+- You know you're building for the future because Go was made for this stuff. 
+- In python I used gevent - It's hacky, it's slow and eats a lot of memory. 
+- Will gevent be the thing in the future? Probably not.. 
+- Use *gorename* if you can figure out how to make it work. I couldn't so I used *sed*.
+
+* Source
+
+.link https://github.com/xarg/imap https://github.com/xarg/imap  
