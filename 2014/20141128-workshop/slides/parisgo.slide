@@ -1,0 +1,620 @@
+Go workshop
+ParisGo-2014, 2014/11/28
+
+Sebastien Binet
+CNRS/IN2P3
+
+
+* Background
+
+# In this tutorial I'll show you how to install and use the Go Programming Language.
+
+* What is Go?
+
+Go is a new, general-purpose programming language.
+
+- Compiled
+- Statically typed
+- Concurrent
+- Simple
+- Productive
+
+"Go is a wise, clean, insightful, fresh thinking approach to the greatest-hits subset of the well understood."
+- Michael T. Jones
+
+
+* History
+
+- Project starts at Google in 2007 (by Griesemer, Pike, Thompson)
+- Open source release in November 2009
+- More than 250 contributors join the project
+- Version 1.0 release in March 2012
+- Version 1.1 release in May 2013
+- Version 1.2 release in December 2013
+- Version 1.3 release in June 2014
+
+# Go was originally built by a team at Google, led by Robert Griesemer, Rob Pike, and Ken Thompson. In November 2010, Go was launched publically as an open source project. Since then, a team at Google and more than 250 contributors from the open source community continued to improve the Go language, libraries, and tools.
+
+# In March 2012, we announced Go 1, a version of the language and libraries that will be supported for years to come. 
+
+* Getting started
+
+* Install Go
+
+.link http://golang.org/doc/install
+
+- Install from binary distributions or build from source
+- 32- and 64-bit x86 and ARM processors
+- Windows, Mac OS X, Linux, and FreeBSD
+- Other platforms may be supported by `gccgo`
+
+# Go is available in binary form for Windows, Mac OS X, Linux, and FreeBSD running under 32 and 64-bit x86 processor architectures. To install Go on these systems, download the appropriate file from golang.org and either open the package installer (Windows or OS X) or extract the archive to /usr/local/go (Linux and FreeBSD).  
+
+# If you use a different operating system or processor architecture, you may still be able to use Go by building it from source or using gccgo (an alternate Go compiler based on the GNU C Compiler). See the installation instructions on golang.org for how to do this.
+
+* Test your Go installation
+
+# Let's build and run a simple Go program to check that we have a valid Go install. Create a file named hello.go somewhere convenient and populate it with this Go source code:
+
+Put this code into `hello.go`:
+
+.play _code/hello.go
+
+# Now, from a command prompt, run `go run hello.go`. This will build your program, storing the executable binary in a temporary location, and run it. You should see the greeting printed to the console.
+
+Run the program:
+
+  $ go run hello.go
+
+
+* The go tool
+
+The `go` tool is the standard tool for building, testing, and installing Go programs.
+
+Compile and run `hello.go`:
+
+  $ go run hello.go
+
+Run `zip` tests:
+
+  $ go test archive/zip
+  ok  	archive/zip	19.557s
+
+Build and format the files in the current directory:
+
+  $ go build
+  $ gofmt -w .
+
+Fetch and install `websocket`:
+
+  $ go get golang.org/x/net/websocket
+
+* Workspaces
+
+The `go` tool derives build instructions from Go source code.
+
+There's no need to write and maintain build scripts.
+
+For this to work, some prescribed directory structure, known as a workspace, is required.
+
+  workspace/
+    bin # executable binaries
+    pkg # compiled object files
+    src # source code
+
+* Create a workspace
+
+Create your workspace now.
+
+#I prefer to use the name "gocode", but you can use whatever you like.
+
+  $ mkdir -p $HOME/parisgo-work/src
+
+(The `bin` and `pkg` sub-directories will be created by the `go` tool.)
+
+Tell the `go` tool where your workspace is by setting the `GOPATH` environment variable:
+# You can do this on OS X, Linux, and FreeBSD by adding this line to the `$HOME/.profile` and re-starting any running shells:
+
+  export GOPATH=$HOME/parisgo-work
+
+# See the installation instructions at golang.org for how to set `GOPATH` under Windows.
+
+You may also want to add the `bin` sub-directory of your workspace to your `PATH`:
+
+  export PATH=$PATH:$GOPATH/bin
+
+This lets you run your Go programs without specifying their full path.
+
+(You may want to put these `export` commands in the `.bash_profile` file in your home directory.)
+
+* Choose a namespace
+
+Choose a special place for your Go code.
+
+I use `"github.com/sbinet"`, the root of my GitHub account (useful with `go get`).
+
+For this tutorial, let us all use `"github.com/parisgo"`
+
+# Once you have chosen a namespace, create the required paths inside the `src` directory of your workspace:
+
+  $ mkdir -p $GOPATH/src/github.com/parisgo
+
+Create a `hello` directory in your namespace and copy `hello.go` there:
+  
+  $ mkdir $GOPATH/src/github.com/parisgo/hello
+  $ cp hello.go $GOPATH/src/github.com/parisgo/hello/main.go
+
+Now you can build and install the hello program with the `go` tool:
+
+  $ go install github.com/parisgo/hello
+
+This builds an executable named `hello`, and installs it to the `bin` directory of your workspace.
+
+  $ $GOPATH/bin/hello
+  Hello, fellow gopher
+
+
+* Hello World - web-2.0
+
+Create a `hello-web` directory in your namespace and put `hello-web.go` there:
+
+  $ mkdir $GOPATH/src/github.com/parisgo/hello-web
+
+.code _code/hello-web.go
+
+# Build and run `go build && ./hello-web`
+
+* ex-01: a program printing out its arguments
+
+.code _code/ex-01.go
+
+  $ ex-01 foo bar baz 01234
+  args: [ex-01 foo bar baz 01234]
+
+  $ `which ex-01` foo bar baz 01234 
+  args: [/home/binet/parisgo-work/bin/ex-01 foo bar baz 01234]
+
+* Interlude: godoc
+
+Browsing documentation is performed with `godoc`.
+
+  $ godoc os | less
+
+  PACKAGE DOCUMENTATION
+
+  package os
+    import "os"
+
+    Package os provides a platform-independent interface to operating system
+    functionality. The design is Unix-like, although the error handling is
+    Go-like; failing calls return values of type error rather than error
+    numbers. Often, more information is available within the error. For
+    example, if a call that takes a file name fails, such as Open or Stat,
+    the error will include the failing file name when printed and will be of
+    type *PathError, which may be unpacked for more information.
+
+
+* 
+
+  $ godoc os File | less
+
+
+  type File struct {
+      // contains filtered or unexported fields
+  }
+      File represents an open file descriptor.
+  
+  func Create(name string) (file *File, err error)
+      Create creates the named file mode 0666 (before umask), truncating it if
+      it already exists. If successful, methods on the returned File can be
+      used for I/O; the associated file descriptor has mode O_RDWR. If there
+      is an error, it will be of type *PathError.
+  
+  func Open(name string) (file *File, err error)
+      Open opens the named file for reading. If successful, methods on the
+      returned file can be used for reading; the associated file descriptor
+      has mode O_RDONLY. If there is an error, it will be of type *PathError.
+
+
+* 
+
+Also available from:
+
+.link http://golang.org/pkg
+
+.link http://golang.org/pkg/os
+
+or locally:
+
+  $ godoc -http=:8080
+  $ open localhost:8080/pkg
+
+
+* ex-01 - II
+
+  $ godoc os Args
+
+  var Args []string
+      Args hold the command-line arguments, starting with the program name.
+
+
+Modify `ex-01` to iterate over this slice and print each argument (except the executable name) on a line, prefixed with its index number:
+
+  $ ex-01 foo baz
+  0: "foo"
+  1: "baz"
+
+(Make sure it still works when no argument is passed to the command)
+
+
+* ex-01 - II (solution)
+
+.code _code/ex-01-index.go
+
+
+* ex-02 - a simple calculator
+
+Let's create a new `ex-02` program taking integers as arguments from the command line and returning their sum:
+
+  $ ex-02 1 2 3 4 100
+  sum= 110
+
+  $ ex-02 1 2 3 4 100 01
+  sum= 111
+
+  $ ex-02 1 2 3 4 100 1.2
+  **error** strconv.ParseInt: parsing "1.2": invalid syntax
+
+*Hint:* `godoc` `strconv`
+
+* ex-02 - solution
+
+.code _code/ex-02.go
+
+
+* ex-02 - II
+
+Let's modify `ex-02` to take an optional `-v` argument to enable a verbose mode, displaying the running sum:
+
+  $ ex-02 -v 1 2 3 4 100
+  0
+  + 1 -> 1
+  + 2 -> 3
+  + 3 -> 6
+  + 4 -> 10
+  + 100 -> 110
+  ===============
+  sum= 110
+
+
+  $ ex-02 1 2 3 4 100
+  sum= 110
+
+*Hint:* `godoc` `flag`
+*Hint:* beware, correctly handle the extra `-v` argument.
+
+
+* ex-02 - II (solution)
+
+.code _code/ex-02-flag.go /^func main/,/^}/ HLflag
+
+
+* ex-03 - rot13
+
+Let's create a new `rot13` package:
+
+  $ mkdir -p $GOPATH/src/github.com/parisgo/rot13
+
+- `rot13` will implement the Caesar cipher ("rotate by 13 places"):
+
+.link http://en.wikipedia.org/wiki/ROT13
+
+
+* ex-03 - rot13 - II
+
+- in that `rot13` package, create `rot13_test.go` with the following content:
+
+.code _code/rot13_test.go /STARTIMPORT OMIT/,/ENDIMPORT OMIT/ HLxxx
+
+
+* ex-03 - rot13 - III
+
+- in that `rot13` package, create `rot13_test.go` with the following content:
+
+.code _code/rot13_test.go /^func TestRot13/,/^}/ HLxxx
+
+
+* ex-03 - rot13 - IV
+
+- still in `rot13`, create `rot13.go` with the following content:
+
+  package rot13
+
+  func rot13(b byte) byte {
+       // ...
+  }
+
+- under this `rot13` transformation, `"hello"` should become `"uryyb"`
+
+- run:
+
+  $ go test -v
+  === RUN TestRot13
+  --- PASS: TestRot13 (0.00 seconds)
+  PASS
+  ok  	github.com/parisgo/rot13	0.002s
+  
+and modify the `rot13` function until the test passes.
+
+- `go` `test` builds and runs the tests in the local directory.
+
+
+* ex-03 - V
+
+A common pattern in `Go` is an `io.Reader` that wraps another `io.Reader`, modifying the stream in some way.
+
+A typical example is the `encoding/gzip.NewReader` function which takes an `io.Reader` (a stream of gzipped data) and returns a `*gzip.Reader` that also implements `io.Reader` (a stream of the decompressed data).
+
+- create a new `ex-03` program with the following content:
+
+.code _code/ex-03.go HLxxx
+
+
+* ex-03 - VI
+
+- now, in `rot13.go` implement the `io.Reader` interface:
+
+.code _code/rot13.go /STARTROT13 OMIT/,/ENDROT13 OMIT/
+
+  func (r reader) Read(p []byte) (int, error) {
+       // ...
+  }
+
+- eventually, the following should work:
+
+  $ echo "hello" | ex-03
+  uryyb
+
+  $ echo "hello" | ex-03 | ex-03
+  hello
+
+
+* A (final) larger example
+
+
+* Top 10 identifiers in std library
+
+.code _code/idents.go
+
+  $ cat $(find $GOROOT -name '*.go') | ./idents | sort | uniq -c | sort -nr | sed 10q
+  3.08s user 2.49s system 171% cpu 3.245 total
+
+* A variation: Histogram of Go statements
+
+A histogram is a map from statement name ("if", "for", etc.) to use count:
+
+.code _code/histo0.go /histogram START/,/histogram END/
+
+Algorithm:
+
+- Use walkStdLib to traverse all files of the std library
+- For each file, parse and create abstract syntax tree
+- Traverse syntax tree and add each statement to histogram
+- Print the result
+
+.code _code/histo0.go /main START/,/main END/
+
+* A variation: Histogram of Go statements
+
+Let's create a new program called `indexer`.
+
+Initial code in: [[http://github.com/GolangParis/talks/2014/blob/master/20141128-workshop/indexer/main.go][github.com/GolangParis/talks/2014/20141128-workshop/indexer]]
+
+* Processing a Go source file
+
+.code _code/histo0.go /add START/,/add END/
+
+
+* Printing the histogram
+
+.play _code/histo0.go /print START/,/print END/
+
+Note: Histogram (map) iteration order is not specified.
+
+* Results (so far)
+
+  $ time indexer
+     0.  25.55%  53991  *ast.AssignStmt
+     1.   1.84%   3883  *ast.ForStmt
+     2.   0.06%    129  *ast.LabeledStmt
+     3.   1.10%   2325  *ast.BranchStmt
+     4.   0.60%   1259  *ast.SwitchStmt
+     5.   2.59%   5478  *ast.DeclStmt
+  [...]
+     9.  26.33%  55651  *ast.BlockStmt
+    10.  12.93%  27335  *ast.IfStmt
+    11.  11.72%  24759  *ast.ExprStmt
+    12.   2.66%   5617  *ast.CaseClause
+    13.   1.34%   2833  *ast.RangeStmt
+  [...]
+    18.   0.16%    348  *ast.GoStmt
+  indexer  2.87s user 0.06s system 101% cpu 2.900 total
+
+compared to:
+
+  $ cat $(find $GOROOT -name '*.go') | ./idents | sort | uniq -c | sort -nr | sed 10q
+  3.08s user 2.49s system 171% cpu 3.245 total
+
+* Sorting
+
+sort.Sort operates on any type that implements the sort.Interface:
+
+	interface {
+		Len() int
+		Swap(i, j int)
+		Less(i, j int) bool
+	}
+
+For instance, to sort a slice of strings lexically, define:
+
+.code _code/sort.go /lexical START/,/lexical END/
+
+And sort:
+
+	sort.Sort(lexical(s))  // where s is a []string slice
+
+
+* Sorting histogram entries
+
+.code _code/histo.go /byCount START/,/byCount END/
+
+
+* Improved histogram printing
+
+.play _code/histo.go /print START/,/print END/
+
+ 
+* Concurrency
+
+* Goroutines
+
+- The _go_ statement launches a function call as a goroutine
+	go f()
+	go f(x, y, ...)
+
+- A goroutine runs concurrently (but not necessarily in parallel)
+- A goroutine has its own stack
+
+
+* A simple example
+
+.code _code/concurrency1.go /f START/,/f END/
+
+Function f is launched as 3 different goroutines, all running concurrently:
+
+.play _code/concurrency1.go /main START/,/main END/
+
+
+* Communication via channels
+
+A channel type specifies a channel value type (and possibly a communication direction):
+
+	chan int
+	chan<- string  // send-only channel
+	<-chan T       // receive-only channel
+
+A channel is a variable of channel type:
+
+	var ch chan int
+	ch := make(chan int)  // declare and initialize with newly made channel
+
+A channel permits _sending_ and _receiving_ values:
+
+	ch <- 1   // send value 1 on channel ch
+	x = <-ch  // receive a value from channel ch (and assign to x)
+
+Channel operations synchronize the communicating goroutines.
+
+* Communicating goroutines
+
+Each goroutine sends its results via channel ch:
+
+.code _code/concurrency2.go /f START/,/f END/
+
+The main goroutine receives (and prints) all results from the same channel:
+
+.play _code/concurrency2.go /main START/,/main END/
+
+
+* Putting it all together
+
+
+* Analyze files concurrently, map-reduce style
+
+Mapper:
+
+.code _code/histop.go /mapper START/,/mapper END/
+
+Reducer:
+
+.code _code/histop.go /reducer START/,/reducer END/
+
+.code _code/histop.go /merge START/,/merge END/
+
+
+* From sequential program...
+
+.play _code/histo.go /main START/,/main END/
+
+
+* ... to concurrent program
+
+.play _code/histop.go /main START/,/main END/
+
+
+* Acknowledgements / resources
+
+Most of this tutorial has been extracted or adapted from:
+
+.link http://talks.golang.org/2012/tutorial.slide
+
+.link http://talks.golang.org/2014/taste.slide
+
+.link http://tour.golang.org
+
+
+* Extra
+
+* extra-01 - parsing a text file
+
+Let's create a new `extra-01` program which will open a text file and count words in it:
+
+  $ extra-01 github.com/GolangParis/talks/2014/20141128-workshop/testdata/lorem-ipsum.txt
+  69
+
+*Hint:* `godoc` `os` `Open`
+*Hint:* `godoc` `io` `EOF`
+*Hint:* `godoc` `bufio`
+
+*Hint:* if it returns `70` you are not correctly handling empty strings.
+
+* extra-01 (solution)
+
+.code _code/extra-01.go /^func main/,/^}/ HLxxx
+
+
+* extra-01 - II
+
+Let's modify `extra-01` to display general statistics:
+- number of lines
+- number of words
+- 5 most popular words
+
+ $ extra-01 testdata/lorem-ipsum.txt
+  #lines: 7
+  #words: 69
+
+  popcon:
+  #1: "in" (3)
+  #2: "ut" (2)
+  #3: "dolore" (2)
+  #4: "dolor" (2)
+  #5: "voluptate" (1)
+
+*Hint:* use a `map[string]int`
+*Hint:* `godoc` `sort` `Sort`
+*Hint:* `godoc` `sort` `Reverse`
+
+* extra-01 - II (solution)
+
+.code _code/extra-01-stats.go /START OMIT/,/END OMIT/ HLxxx
+
+
+* extra-01 - II (solution)
+
+.code _code/extra-01-stats.go /STARTSORT OMIT/,/ENDSORT OMIT/ HLxxx
+
+* extra-01 - II (solution)
+
+.code _code/extra-01-stats.go /STARTITEM OMIT/,/ENDITEM OMIT/ HLxxx
+
