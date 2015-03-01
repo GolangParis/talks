@@ -3,6 +3,7 @@ Talks during Golang Paris meetups
 
 ## 2015
 
+- [bootcamp - concurrency (2015/03/01)](http://talks.godoc.org/github.com/GolangParis/talks/2015/bootcamp-chap-8-conc/conc.slide#1)
 - [gotoolchain (2015/02/20)](http://talks.godoc.org/github.com/0intro/talks/2015/gotoolchain/gotoolchain.slide#1)
 - [imap (2015/02/20)](http://talks.godoc.org/github.com/GolangParis/talks/2015/imap/imap.slide#1)
 
