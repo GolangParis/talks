@@ -25,7 +25,7 @@ func main() {
 			fmt.Printf("%#v", r.Body)
 			return
 		case err := <-errors:                      // HLxxx
-			log.Fatal(err)
+			log.Fatal(*err)
 		case <-time.After(200 * time.Millisecond): // HLxxx
 			fmt.Printf("Timed out!")
 			return
