@@ -6,6 +6,7 @@ Talks during Golang Paris meetups
 - [bootcamp - concurrency (2015/03/01)](http://talks.godoc.org/github.com/GolangParis/talks/2015/bootcamp-chap-8-conc/conc.slide#1)
 - [gotoolchain (2015/02/20)](http://talks.godoc.org/github.com/0intro/talks/2015/gotoolchain/gotoolchain.slide#1)
 - [imap (2015/02/20)](http://talks.godoc.org/github.com/GolangParis/talks/2015/imap/imap.slide#1)
+- [Introduction to containers and Docker (2015/01/12)](/2015/introduction-to-containers-and-docker/slides.pdf)
 
 ### 23 avril 2015 : Spéciale frameworks micro vs. macro : Fight !
 - [introduction](https://github.com/GolangParis/talks/blob/master/2015/04-23-frameworks/1-Introduction.pdf)
