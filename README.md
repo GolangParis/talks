@@ -1,6 +1,10 @@
 # talks
 Talks during Golang Paris meetups
 
+## 2020
+
+- [Gestion des erreurs en Go 1.14 (26/02/2020)](/2020/Erreurs20B26.pdf)
+
 ## 2015
 
 - [bootcamp - concurrency (2015/03/01)](http://talks.godoc.org/github.com/GolangParis/talks/2015/bootcamp-chap-8-conc/conc.slide#1)
